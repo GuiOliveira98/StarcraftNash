@@ -33,6 +33,7 @@ class Stats:
        on any given time horizon and threshold."""
 
     def __init__(self):
+        # TODO: Change the only 3 integer possibilities to n string possibilities (name of the bots)
         self.sum = [[0, 0, 0]]
 
     def add(self, move, score):
@@ -65,9 +66,10 @@ class Predictor:
 
     def addguess(self, lastmove, guess):
         if lastmove != -1:
+            # Note: diff is a move (How diff can be calculated to bots?)
             diff = (lastmove - self.prediction) % 3
-            self.stats.add(rps.beat(diff), 1)
-            self.stats.add(rps.loseto(diff), -1)
+            self.stats.add(rps.beat(diff), 1)     # TODO: get the bot that diff beats
+            self.stats.add(rps.loseto(diff), -1)  # TODO: get the bot that diff loses
             self.stats.advance()
         self.prediction = guess
 
@@ -124,7 +126,7 @@ class Iocaine(StrategyBase):
         self.predict_random.addguess(them, rand)
         self.predict_fixed.addguess(them, 0)
 
-        # Execute the history and frequency stratgies.
+        # Execute the history and frequency strategies.
         for a, age in enumerate(ages):
             # For each time window, there are three ways to recall a similar time:
             # (0) by history of my moves; (1) their moves; or (2) pairs of moves.
