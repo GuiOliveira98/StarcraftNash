@@ -5,6 +5,18 @@
 
 import random
 from strategy_base import StrategyBase
+from config import Config
+import scorechart
+
+
+def get_best_response(score_chart, choice):
+    response = min(score_chart[choice], key=score_chart[choice].get)
+    return response
+
+
+def get_worst_response(score_chart, choice):
+    response = max(score_chart[choice], key=score_chart[choice].get)
+    return response
 
 
 def recall(age, hist):
@@ -64,12 +76,13 @@ class Predictor:
         self.stats = Stats()
         self.lastguess = -1
 
-    def addguess(self, lastmove, guess):
+    def addguess(self, lastmove, guess, beats, loses_to):
         if lastmove != -1:
+            # TODO: Recalc diff
             # Note: diff is a move (How diff can be calculated to bots?)
             diff = (lastmove - self.prediction) % 3
-            self.stats.add(rps.beat(diff), 1)     # TODO: get the bot that diff beats
-            self.stats.add(rps.loseto(diff), -1)  # TODO: get the bot that diff loses
+            self.stats.add(beats(diff), 1)
+            self.stats.add(loses_to(diff), -1)
             self.stats.advance()
         self.prediction = guess
 
@@ -88,6 +101,7 @@ class Iocaine(StrategyBase):
            the basic random-number-generator strategy.  Also build 6 meta second
            guessers to evaluate 6 different time horizons on which to score
            the 50 strategies' second-guesses."""
+        super(Iocaine, self).__init__(strategy_name)
         self.strategy_name = strategy_name
         self.predictors = []
         self.predict_history = self.predictor((len(ages), 2, 3))
@@ -97,6 +111,16 @@ class Iocaine(StrategyBase):
         self.predict_meta = [Predictor() for _ in xrange(len(ages))]
         self.stats = [Stats() for _ in xrange(2)]
         self.histories = [[], [], []]
+
+        config = Config.get_instance()
+
+        # read score chart from a file
+        self.score_chart = scorechart.from_file(
+            config.get(Config.SCORECHART_FILE)
+        )
+
+        self._beats = lambda x: get_best_response(self.score_chart, x)
+        self._loses_to = lambda x: get_worst_response(self.score_chart, x)
 
     def get_next_bot(self):
         pass
@@ -141,11 +165,11 @@ class Iocaine(StrategyBase):
                         move = rand
                     else:
                         move = self.histories[mimic][when]
-                    self.predict_history[a][mimic][watch].addguess(them, move)
+                    self.predict_history[a][mimic][watch].addguess(them, move, self._beats, self._loses_to)
                 # Also we can anticipate the future by expecting it to be the same
                 # as the most frequent past (either counting their moves or my moves).
                 mostfreq, score = self.stats[mimic].max(age, rand, -1)
-                self.predict_frequency[a][mimic].addguess(them, mostfreq)
+                self.predict_frequency[a][mimic].addguess(them, mostfreq, self._beats, self._loses_to)
 
         # All the predictors have been updated, but we have not yet scored them
         # and chosen a winner for this round.  There are several timeframes
@@ -156,7 +180,7 @@ class Iocaine(StrategyBase):
             best = (-1, -1)
             for predictor in self.predictors:
                 best = predictor.bestguess(age, best)
-            self.predict_meta[meta].addguess(them, best[0])
+            self.predict_meta[meta].addguess(them, best[0], self._beats, self._loses_to)
 
         # Finally choose the best meta prediction from the final six, scoring
         # these against each other on the whole-game timeframe.
