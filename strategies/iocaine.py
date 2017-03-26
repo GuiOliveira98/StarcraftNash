@@ -7,6 +7,7 @@ import random
 from strategy_base import StrategyBase
 from config import Config
 import scorechart
+import copy
 
 
 def get_best_response(score_chart, choice):
@@ -44,15 +45,15 @@ class Stats:
     """Maintains three running counts and returns the highest count based
        on any given time horizon and threshold."""
 
-    def __init__(self):
+    def __init__(self, num=3):
         # TODO: Change the only 3 integer possibilities to n string possibilities (name of the bots)
-        self.sum = [[0, 0, 0]]
+        self.sum = [[0 for _ in xrange(num)]]
 
     def add(self, move, score):
         self.sum[-1][move] += score
 
     def advance(self):
-        self.sum.append(self.sum[-1])
+        self.sum.append(copy.copy(self.sum[-1]))
 
     def max(self, age, default, score):
         if age >= len(self.sum):
@@ -87,8 +88,8 @@ class Predictor:
         self.prediction = guess
 
     def bestguess(self, age, best):
-        bestdiff = self.stats.max(age, (best[0] - self.prediction) % 3, best[1])
-        return (bestdiff[0] + self.prediction) % 3, bestdiff[1]
+        bestdiff = self.stats.max(age, (best[0] - self.prediction) % 3, best[1]) # (best[0] - self.prediction) % 3 is to make a diff calc
+        return (bestdiff[0] + self.prediction) % 3, bestdiff[1] # bestdiff[0] + self.prediction) % 3 is to revert the diff calc
 
 
 ages = [1000, 100, 10, 5, 2, 1]
@@ -102,6 +103,9 @@ class Iocaine(StrategyBase):
            guessers to evaluate 6 different time horizons on which to score
            the 50 strategies' second-guesses."""
         super(Iocaine, self).__init__(strategy_name)
+
+        config = Config.get_instance()
+
         self.strategy_name = strategy_name
         self.predictors = []
         self.predict_history = self.predictor((len(ages), 2, 3))
@@ -109,10 +113,8 @@ class Iocaine(StrategyBase):
         self.predict_fixed = self.predictor()
         self.predict_random = self.predictor()
         self.predict_meta = [Predictor() for _ in xrange(len(ages))]
-        self.stats = [Stats() for _ in xrange(2)]
+        self.stats = [Stats(num=len(config.data[config.BOTS])) for _ in xrange(2)]
         self.histories = [[], [], []]
-
-        config = Config.get_instance()
 
         # read score chart from a file
         self.score_chart = scorechart.from_file(
@@ -143,12 +145,12 @@ class Iocaine(StrategyBase):
             self.histories[1].append(them)
             self.histories[2].append((self.histories[0][-1], them))
             for watch in xrange(2):
-                self.stats[watch].add(self.histories[watch][-1], 1)
+                self.stats[watch].add(self.bot_list.index(self.histories[watch][-1]), 1)
 
         # Execute the basic RNG strategy and the fixed-move strategy.
-        rand = random.randrange(3)
+        rand = self.bot_list[random.randrange(len(self.bot_list))]
         self.predict_random.addguess(them, rand)
-        self.predict_fixed.addguess(them, 0)
+        self.predict_fixed.addguess(them, self.bot_list[0])
 
         # Execute the history and frequency strategies.
         for a, age in enumerate(ages):
@@ -168,7 +170,8 @@ class Iocaine(StrategyBase):
                     self.predict_history[a][mimic][watch].addguess(them, move, self._beats, self._loses_to)
                 # Also we can anticipate the future by expecting it to be the same
                 # as the most frequent past (either counting their moves or my moves).
-                mostfreq, score = self.stats[mimic].max(age, rand, -1)
+                mostfreq_idx, score = self.stats[mimic].max(age, rand, -1)
+                mostfreq = self.bot_list(mostfreq_idx)
                 self.predict_frequency[a][mimic].addguess(them, mostfreq, self._beats, self._loses_to)
 
         # All the predictors have been updated, but we have not yet scored them
