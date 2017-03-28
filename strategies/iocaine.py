@@ -8,6 +8,23 @@ from strategy_base import StrategyBase
 from config import Config
 import scorechart
 import copy
+import operator
+
+
+def get_loses_to_list(score_chart, choice, n=-1):
+    response = {k: v for k, v in score_chart[choice].iteritems() if v < 50.0}
+    sorted_response = sorted(response.items(), key=operator.itemgetter(1))
+    if n > 0:
+        sorted_response = sorted_response[:n]
+    return [r[0] for r in sorted_response]
+
+
+def get_beats_list(score_chart, choice, n):
+    response = {k: v for k, v in score_chart[choice].iteritems() if v > 50.0}
+    sorted_response = sorted(response.items(), key=operator.itemgetter(1), reverse=True)
+    if n > 0:
+        sorted_response = sorted_response[:n]
+    return [r[0] for r in sorted_response]
 
 
 def get_best_response(score_chart, choice):
@@ -46,7 +63,6 @@ class Stats:
        on any given time horizon and threshold."""
 
     def __init__(self, num=3):
-        # TODO: Change the only 3 integer possibilities to n string possibilities (name of the bots)
         self.sum = [[0 for _ in xrange(num)]]
 
     def add(self, move, score):
@@ -55,15 +71,15 @@ class Stats:
     def advance(self):
         self.sum.append(copy.copy(self.sum[-1]))
 
-    def max(self, age, default, score):
+    def max(self, age, score):
         if age >= len(self.sum):
             diff = self.sum[-1]
         else:
-            diff = [self.sum[-1][i] - self.sum[-1 - age][i] for i in xrange(3)]
+            diff = [self.sum[-1][i] - self.sum[-1 - age][i] for i in xrange(len(self.sum[0]))]
         m = max(diff)
         if m > score:
             return diff.index(m), m
-        return default, score
+        return -1, score
 
 
 class Predictor:
@@ -76,20 +92,41 @@ class Predictor:
     def __init__(self):
         self.stats = Stats()
         self.lastguess = -1
+        self.prediction = 'null'
 
     def addguess(self, lastmove, guess, beats, loses_to):
-        if lastmove != -1:
-            # TODO: Recalc diff
-            # Note: diff is a move (How diff can be calculated to bots?)
-            diff = (lastmove - self.prediction) % 3
-            self.stats.add(beats(diff), 1)
-            self.stats.add(loses_to(diff), -1)
+        if lastmove is not None:
+
+            if lastmove == self.prediction:              # Same choice
+                self.stats.add(1, 1)
+                self.stats.add(2, -1)
+            elif lastmove in loses_to(self.prediction):  # lastmove beats prediction
+                self.stats.add(0, 1)
+                self.stats.add(1, -1)
+            elif self.prediction in loses_to(lastmove):  # prediction beats lastmove
+                self.stats.add(2, 1)
+                self.stats.add(0, -1)
+
             self.stats.advance()
         self.prediction = guess
 
-    def bestguess(self, age, best):
-        bestdiff = self.stats.max(age, (best[0] - self.prediction) % 3, best[1]) # (best[0] - self.prediction) % 3 is to make a diff calc
-        return (bestdiff[0] + self.prediction) % 3, bestdiff[1] # bestdiff[0] + self.prediction) % 3 is to revert the diff calc
+    def bestguess(self, age, best, loses_to):
+        action, score = self.stats.max(age, best[1])
+        if score == best[1]:
+            return best
+        else:
+            res = ''
+
+            def loses_to_one(x):
+                return loses_to(x, 1)[0]
+
+            if action == 2:    # Normal
+                res = loses_to_one(self.prediction)
+            elif action == 0:  # Second-guessing
+                res = loses_to_one(loses_to_one(loses_to_one(self.prediction)))
+            elif action == 1:  # Triple-guessing
+                res = loses_to_one(loses_to_one(loses_to_one(loses_to_one(loses_to_one(self.prediction)))))
+            return res, score
 
 
 ages = [1000, 100, 10, 5, 2, 1]
@@ -121,11 +158,15 @@ class Iocaine(StrategyBase):
             config.get(Config.SCORECHART_FILE)
         )
 
-        self._beats = lambda x: get_best_response(self.score_chart, x)
-        self._loses_to = lambda x: get_worst_response(self.score_chart, x)
+        # Returns who x beats (limited by n)
+        self._beats = lambda x, n=-1: get_beats_list(self.score_chart, x, n=n)
+        # Returns who x loses to (limited by n)
+        self._loses_to = lambda x, n=-1: get_loses_to_list(self.score_chart, x, n=n)
 
     def get_next_bot(self):
-        pass
+        opponent_choice = self.opponent_choice(-1)
+        my_move = self.move(opponent_choice)
+        return my_move
 
     def predictor(self, dims=None):
         """Returns a nested array of predictor objects, of the given dimensions."""
@@ -141,7 +182,7 @@ class Iocaine(StrategyBase):
         # histories[1] stores their moves (last one just now being supplied to us);
         # histories[2] stores pairs of our and their last moves.
         # stats[0] and stats[1] are running counters our recent moves and theirs.
-        if them != -1:
+        if them is not None:
             self.histories[1].append(them)
             self.histories[2].append((self.histories[0][-1], them))
             for watch in xrange(2):
@@ -149,8 +190,8 @@ class Iocaine(StrategyBase):
 
         # Execute the basic RNG strategy and the fixed-move strategy.
         rand = self.bot_list[random.randrange(len(self.bot_list))]
-        self.predict_random.addguess(them, rand)
-        self.predict_fixed.addguess(them, self.bot_list[0])
+        self.predict_random.addguess(them, rand, self._beats, self._loses_to)
+        self.predict_fixed.addguess(them, self.bot_list[0], self._beats, self._loses_to)
 
         # Execute the history and frequency strategies.
         for a, age in enumerate(ages):
@@ -170,8 +211,8 @@ class Iocaine(StrategyBase):
                     self.predict_history[a][mimic][watch].addguess(them, move, self._beats, self._loses_to)
                 # Also we can anticipate the future by expecting it to be the same
                 # as the most frequent past (either counting their moves or my moves).
-                mostfreq_idx, score = self.stats[mimic].max(age, rand, -1)
-                mostfreq = self.bot_list(mostfreq_idx)
+                mostfreq_idx, score = self.stats[mimic].max(age, -1)
+                mostfreq = self.bot_list[mostfreq_idx]
                 self.predict_frequency[a][mimic].addguess(them, mostfreq, self._beats, self._loses_to)
 
         # All the predictors have been updated, but we have not yet scored them
@@ -180,16 +221,16 @@ class Iocaine(StrategyBase):
         # do best.  So score all 50 predictors on all 6 timeframes, and record
         # the best 6 predictions in meta predictors, one for each timeframe.
         for meta, age in enumerate(ages):
-            best = (-1, -1)
+            best = ('null', -1)
             for predictor in self.predictors:
-                best = predictor.bestguess(age, best)
+                best = predictor.bestguess(age, best, self._loses_to)
             self.predict_meta[meta].addguess(them, best[0], self._beats, self._loses_to)
 
         # Finally choose the best meta prediction from the final six, scoring
         # these against each other on the whole-game timeframe.
-        best = (-1, -1)
+        best = ('null', -1)
         for meta in xrange(len(ages)):
-            best = self.predict_meta[meta].bestguess(len(self.histories[0]), best)
+            best = self.predict_meta[meta].bestguess(len(self.histories[0]), best, self._loses_to)
 
         # We've picked a next move.  Record our move in histories[0] for next time.
         self.histories[0].append(best[0])

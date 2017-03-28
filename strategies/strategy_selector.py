@@ -11,6 +11,7 @@ import exp3
 import ucb
 import fictitious_play
 import no_regret
+import iocaine
 
 __author__ = 'Hector Azpurua'
 
@@ -33,7 +34,8 @@ class StrategySelector:
         'enash': e_nash.EpsilonNash,                        # nash w/ prob 1-e; frequentist w/ prob e
         'rotate': rotate.Rotate,                            # selects sequentially
         'fictitious': fictitious_play.FictitiousPlay,       # fictitious play
-        'noregret': no_regret.NoRegret                      # no-regret
+        'noregret': no_regret.NoRegret,                     # no-regret
+        'iocaine': iocaine.Iocaine                          # iocaine powder
     }
 
     def __init__(self):
