@@ -155,7 +155,8 @@ class Iocaine(StrategyBase):
 
         # read score chart from a file
         self.score_chart = scorechart.from_file(
-            config.get(Config.SCORECHART_FILE)
+            config.get(Config.SCORECHART_FILE),
+            self.bot_list
         )
 
         # Returns who x beats (limited by n)

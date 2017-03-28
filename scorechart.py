@@ -4,7 +4,7 @@ import collections
 __author__ = 'Anderson Tavares'
 
 
-def from_file(chart_file, scale=1):
+def from_file(chart_file, bot_list, scale=1):
     """
     Reads a scorechart from a .csv file with choice names in first line and scorechart in the following.
     Example: for the following scorechart with probabilities of victories:
@@ -42,6 +42,7 @@ def from_file(chart_file, scale=1):
 
         # remaining rows have the scores in order
         for row_num, row in enumerate(rows[1:]):
-            chart[names[row_num]] = {names[col_num]: scale*float(col) for col_num, col in enumerate(row)}
+            if names[row_num] in bot_list:
+                chart[names[row_num]] = {names[col_num]: scale*float(col) for col_num, col in enumerate(row) if names[col_num] in bot_list}
 
     return chart
