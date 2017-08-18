@@ -17,7 +17,8 @@ class PriorKnowledgeReplyLast(StrategyBase):
 
         # loads score chart from file
         self.score_chart = scorechart.from_file(
-            Config.get_instance().get(Config.SCORECHART_FILE)
+            Config.get_instance().get(Config.SCORECHART_FILE),
+            self.bot_list
         )
 
     def get_next_bot(self):
