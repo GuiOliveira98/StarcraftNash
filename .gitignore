@@ -88,6 +88,12 @@ com_crashlytics_export_strings.xml
 *.sln
 *.pyproj
 
+# VS Code 
+.vscode/*
+
 # Other stuff
-intermediate/
+intermediate*/
+choices*/
 *.xls
+*.zip
+*.txt
