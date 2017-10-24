@@ -81,7 +81,7 @@ class Config(object):
             Config.instance = Config()
         return Config.instance
 
-    def __init__(self, ):
+    def __init__(self):
         # dir of config file needed coz' path to server is relative
         # self.cfgdir = os.path.dirname(os.path.realpath(cfgpath))
 
