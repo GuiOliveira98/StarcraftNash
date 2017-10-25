@@ -18,28 +18,28 @@
     <choices>
         <choice name="Xelnaga" nashprob=".41975" />
         <choice name="CruzBot" nashprob=".28395" />
-        <choice name="NUSBot" nashprob="0" />
-        <choice name="Aiur" nashprob="0" />
+        <!-- <choice name="NUSBot" nashprob="0" /> -->
+        <!-- <choice name="Aiur" nashprob="0" /> -->
         <choice name="Skynet" nashprob=".2936" />
     </choices>
     
 
     <players>
-        <player type="nash" name="Nash"/>
-        <player type="enash" name="e-Nash" />
-        <player type="frequentist" name="Frequentist 1"/>
-        <player type="frequentist" name="Frequentist 2"/>
-        <player type="replyscore" name="Reply Last"/>
-        <player type="egreedy" name="e-Greedy" />
-        <player type='unique' name="Xelnaga" />
-        <player type="fictitious" name="Fictitious Nash (Stochastic)" config="fictitious_nash_stochastic"/>
-        <player type="fictitious" name="Fictitious Clone (Stochastic)" config="fictitious_clone_stochastic"/>
-        <player type="fictitious" name="Fictitious (Stochastic)" config="fictitious_stochastic"/>
-        <player type="iocaine" name="Iocaine"/>
-        <player type="fictitious" name="Fictitious Nash (Deterministic)" config="fictitious_nash_deterministic"/>
+        <!--<player type="nash" name="Nash"/>-->
+        <!--<player type="enash" name="e-Nash" />-->
+        <!--<player type="frequentist" name="Frequentist 1" />-->
+        <!--<player type="frequentist" name="Frequentist 2" />-->
+        <!--<player type="replyscore" name="Reply Last" />-->
+        <!--<player type="egreedy" name="e-Greedy" />-->
+        <!--<player type='unique' name="Xelnaga" />-->
+        <!-- <player type="fictitious" name="Fictitious Nash (Stochastic)" config="fictitious_nash_stochastic"/> -->
+        <!-- <player type="fictitious" name="Fictitious Clone (Stochastic)" config="fictitious_clone_stochastic"/> -->
+        <!-- <player type="fictitious" name="Fictitious (Stochastic)" config="fictitious_stochastic"/> -->
+        <!--<player type="iocaine" name="Iocaine"/>-->
+        <!-- <player type="fictitious" name="Fictitious Nash (Deterministic)" config="fictitious_nash_deterministic"/> -->
         <player type="fictitious" name="Fictitious Clone (Deterministic)" config="fictitious_clone_deterministic"/>
         <player type="fictitious" name="Fictitious (Deterministic)" config="fictitious_deterministic"/>
-        <player type="noregret" name="No Regret"/>
+        <!--<player type="noregret" name="No Regret"/>-->
         <!-- player type="agent" name="Agent 1" config="configs/Agent_1.xml" -->
         <!--
         <player name="Aiur" />
@@ -60,15 +60,15 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value=".41975" />
             <choice name="CruzBot" value=".28395" />
-            <choice name="NUSBot" value="0" />
-            <choice name="Aiur" value="0" />
+            <!--<choice name="NUSBot" value="0" />-->
+            <!--<choice name="Aiur" value="0" />-->
             <choice name="Skynet" value=".2936" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
            <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!--<choice name="NUSBot" value="1" />-->
+            <!--<choice name="Aiur" value="1" />-->
             <choice name="Skynet" value="1" />
         </fictitious-running-weights>
     </fictitious_nash_stochastic>
@@ -78,15 +78,15 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="0" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!-- <choice name="NUSBot" value="1" /> -->
+            <!-- <choice name="Aiur" value="1" /> -->
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
            <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!-- <choice name="NUSBot" value="1" /> -->
+            <!-- <choice name="Aiur" value="1" /> -->
             <choice name="Skynet" value="1" />
         </fictitious-running-weights>
     </fictitious_stochastic>
@@ -96,15 +96,15 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="0" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!-- <choice name="NUSBot" value="1" /> -->
+            <!-- <choice name="Aiur" value="1" /> -->
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
            <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!-- <choice name="NUSBot" value="1" /> -->
+            <!-- <choice name="Aiur" value="1" /> -->
             <choice name="Skynet" value="1" />
         </fictitious-running-weights>
     </fictitious_clone_stochastic>
@@ -114,15 +114,15 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value=".41975" />
             <choice name="CruzBot" value=".28395" />
-            <choice name="NUSBot" value="0" />
-            <choice name="Aiur" value="0" />
+            <!--<choice name="NUSBot" value="0" />-->
+            <!--<choice name="Aiur" value="0" />-->
             <choice name="Skynet" value=".2936" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
            <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!--<choice name="NUSBot" value="1" />-->
+            <!--<choice name="Aiur" value="1" />-->
             <choice name="Skynet" value="1" />
         </fictitious-running-weights>
     </fictitious_nash_deterministic>
@@ -132,15 +132,15 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="0" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!--<choice name="NUSBot" value="1" />-->
+            <!--<choice name="Aiur" value="1" />-->
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
            <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!--<choice name="NUSBot" value="1" />-->
+            <!--<choice name="Aiur" value="1" />-->
             <choice name="Skynet" value="1" />
         </fictitious-running-weights>
     </fictitious_deterministic>
@@ -150,15 +150,15 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="0" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!--<choice name="NUSBot" value="1" />-->
+            <!--<choice name="Aiur" value="1" />-->
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
            <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <!--<choice name="NUSBot" value="1" />-->
+            <!--<choice name="Aiur" value="1" />-->
             <choice name="Skynet" value="1" />
         </fictitious-running-weights>
     </fictitious_clone_deterministic>

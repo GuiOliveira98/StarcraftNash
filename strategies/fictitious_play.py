@@ -32,8 +32,9 @@ class FictitiousPlay(StrategyBase):
 
         # set counters
         # Note: self.bot_list can't be used here because it isn't initialized from the config file yet
+        bots = config.get_bots()
         self.opponent_choice_counter = {choice_name: self.initial_weights[choice_name] for choice_name in
-                                        config.get_bots()}
+                                        bots}
         self.count_sum = sum([x for _, x in self.opponent_choice_counter.items()])
 
         # set config og stochastic feature. Default value is True
@@ -62,7 +63,20 @@ class FictitiousPlay(StrategyBase):
             likely_opponent_bot = random.choice(likely_opponent_bot_list)
         else:
             likely_opponent_bot = max(opponent_choice_beliefs, key=lambda belief: belief[1])[0]
+            # likely_opponent_bot_with_prob = max(opponent_choice_beliefs, key=lambda belief: belief[1])
+            # likely_opponent_bot_list = [b[0] for b in opponent_choice_beliefs if b[1] == likely_opponent_bot_with_prob[1]]
+            # likely_opponent_bot = sorted(likely_opponent_bot_list)[0]
 
+        # dict representation of the opponent_choice_beliefs
+        blf_dict = {d[0]: d[1] for d in opponent_choice_beliefs}
+
+        # calculate the expected utilities
+        evs = {k: 0 for k in blf_dict}
+        for s1 in evs:
+            for s2 in evs:
+                evs[s1] = evs[s1] + self.score_chart[s1][s2] * blf_dict[s2]
+
+        response = max(evs, key=evs.get)
         # get the best response
-        response = min(self.score_chart[likely_opponent_bot], key=self.score_chart[likely_opponent_bot].get)
+        #response = min(self.score_chart[likely_opponent_bot], key=self.score_chart[likely_opponent_bot].get)
         return response
