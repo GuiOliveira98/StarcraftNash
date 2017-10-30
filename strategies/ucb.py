@@ -77,8 +77,7 @@ class UCB1(StrategyBase):
         Returns the Upper Confidence Bound of an option using the UCB1 formula
         UCB1 formula is: average_reward + sqrt(2 * ln(total_num_of_trials) / num_trials)
         Where total_num_of_trials is the number of matches played so far.
-        :param score: total score attained by the choice
-        :param num_trials: number of times the option was chosen
+        :param choice: dict with sum, sum_of_squares and trials, the option to have its score calculated
         :return:float
         """
         if choice['trials'] == 0:

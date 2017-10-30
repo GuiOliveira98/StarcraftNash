@@ -64,6 +64,7 @@ class Exp3(StrategyBase):
         :return:
         """
         return (1 + self.alpha) ** weight
+
     def get_next_bot(self):
         """
         Selects a bot according to the Exp3 algorithm
