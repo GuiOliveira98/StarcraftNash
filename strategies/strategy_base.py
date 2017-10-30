@@ -29,6 +29,17 @@ class StrategyBase(object):
         """
         pass
 
+    def ranking(self):
+        """
+        Returns a list with the choices ordered by the score
+        given by the choice method. Each list item is a tuple(str,float)
+        with the choice and its score. Score might be zero if the ranking
+        criteria does not consider it (e.g. best-response).
+        Returns an empty list if the choice method does not rank the options.
+        :return: list(tuple(str,float))
+        """
+        return []
+
     def set_bot_list(self, b_list):
         self.bot_list = b_list
 

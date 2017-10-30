@@ -53,7 +53,6 @@ class Main:
                     'using suffix:', hash_suffix
                 overall_players_choices_file = self.config.output_match_choices.replace('#', hash_suffix)
 
-
         for rep in xrange(self.config.repetitions):
             print 'Repetition', rep + 1, 'of', self.config.repetitions, '...'
 
@@ -116,6 +115,11 @@ class Main:
 
                 single_result_dict[player_a.get_name()][player_b.get_name()] = a_win_percentage
                 single_result_dict[player_b.get_name()][player_a.get_name()] = b_win_percentage
+
+                # TODO --- begin: print ranking ---
+                # >>> print code comes here
+                # TODO --- end: print ranking
+
             print  # adds newline
             self.result_list.append(single_result_dict)
 

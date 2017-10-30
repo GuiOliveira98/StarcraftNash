@@ -56,6 +56,15 @@ class EGreedy(StrategyBase):
         #print best_strategy, scores
         return best_strategy
 
+    def ranking(self):
+        scores = self.calculate_scores()
+
+        # constructs a list of tuples from the dict
+        #ranking = [(choice, score) for choice, score in scores.iteritems()]
+
+        # returns the sorted list
+        return sorted(scores, key=scores.get, reverse=True)
+
 
 class EGreedyAverage(EGreedy):
     """
