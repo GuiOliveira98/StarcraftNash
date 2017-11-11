@@ -78,8 +78,8 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="0" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <choice name="NUSBot" value="0" />
+            <choice name="Aiur" value="0" />
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
@@ -96,8 +96,8 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="0" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <choice name="NUSBot" value="0" />
+            <choice name="Aiur" value="0" />
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
@@ -130,10 +130,10 @@
     <fictitious_deterministic>
         <be-stochastic parser="str_to_bool" value="false" />
         <fictitious-initial-weights parser="options_parser">
-            <choice name="Xelnaga" value="0" />
-            <choice name="CruzBot" value="1" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <choice name="Xelnaga" value="1" />
+            <choice name="CruzBot" value="0" />
+            <choice name="NUSBot" value="0" />
+            <choice name="Aiur" value="0" />
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
@@ -150,8 +150,8 @@
         <fictitious-initial-weights parser="options_parser">
             <choice name="Xelnaga" value="1" />
             <choice name="CruzBot" value="0" />
-            <choice name="NUSBot" value="1" />
-            <choice name="Aiur" value="1" />
+            <choice name="NUSBot" value="0" />
+            <choice name="Aiur" value="0" />
             <choice name="Skynet" value="0" />
         </fictitious-initial-weights>
         <fictitious-running-weights parser="options_parser">
@@ -172,9 +172,9 @@
         <output-match-choices value="choices/match-choices-rep_#.csv" />
         <output-intermediate value="intermediate" />
         <random-seed value="1" />
-        <repetitions value="1" />
+        <repetitions value="5" />
         <match-pool-file value="results_demo/fortress1000.txt" />
-        <num-matches value="5000" />
+        <num-matches value="1000" />
         <round-robin value="true" />
         <verbose value="true" />
         <plot value="false" />
