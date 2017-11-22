@@ -36,6 +36,7 @@
         <player type="fictitious" name="Fictitious Clone (Stochastic)" config="fictitious_clone_stochastic"/>
         <player type="fictitious" name="Fictitious (Stochastic)" config="fictitious_stochastic"/>
         <player type="iocaine" name="Iocaine"/>
+        <player type="minimaxq" name="MiniMaxQ" config="minimaxq"/>
         <player type="fictitious" name="Fictitious Nash (Deterministic)" config="fictitious_nash_deterministic"/>
         <player type="fictitious" name="Fictitious Clone (Deterministic)" config="fictitious_clone_deterministic"/>
         <player type="fictitious" name="Fictitious (Deterministic)" config="fictitious_deterministic"/>
@@ -54,6 +55,10 @@
         <player name="NUSBot" />
         -->
     </players>
+
+    <minimaxq>
+        <alpha parser="float" value="0.5"/>
+    </minimaxq>
 
     <fictitious_nash_stochastic>
         <be-stochastic parser="str_to_bool" value="true" />

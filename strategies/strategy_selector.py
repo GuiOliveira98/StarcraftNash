@@ -12,6 +12,7 @@ import ucb
 import fictitious_play
 import no_regret
 import iocaine
+import minimax_q
 
 __author__ = 'Hector Azpurua'
 
@@ -35,7 +36,8 @@ class StrategySelector:
         'rotate': rotate.Rotate,                            # selects sequentially
         'fictitious': fictitious_play.FictitiousPlay,       # fictitious play
         'noregret': no_regret.NoRegret,                     # no-regret
-        'iocaine': iocaine.Iocaine                          # iocaine powder
+        'iocaine': iocaine.Iocaine,                         # iocaine powder
+        'minimaxq': minimax_q.MiniMaxQ                      # MiniMax Q
     }
 
     def __init__(self):

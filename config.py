@@ -31,7 +31,8 @@ def options_parser(element):
 
 element_parsers = {
     'str_to_bool': str_to_bool,
-    'options_parser': options_parser
+    'options_parser': options_parser,
+    'float': default_parser(float)
 }
 
 
