@@ -63,9 +63,6 @@ class FictitiousPlay(StrategyBase):
             likely_opponent_bot = random.choice(likely_opponent_bot_list)
         else:
             likely_opponent_bot = max(opponent_choice_beliefs, key=lambda belief: belief[1])[0]
-            # likely_opponent_bot_with_prob = max(opponent_choice_beliefs, key=lambda belief: belief[1])
-            # likely_opponent_bot_list = [b[0] for b in opponent_choice_beliefs if b[1] == likely_opponent_bot_with_prob[1]]
-            # likely_opponent_bot = sorted(likely_opponent_bot_list)[0]
 
         # dict representation of the opponent_choice_beliefs
         blf_dict = {d[0]: d[1] for d in opponent_choice_beliefs}
@@ -77,6 +74,4 @@ class FictitiousPlay(StrategyBase):
                 evs[s1] = evs[s1] + self.score_chart[s1][s2] * blf_dict[s2]
 
         response = max(evs, key=evs.get)
-        # get the best response
-        #response = min(self.score_chart[likely_opponent_bot], key=self.score_chart[likely_opponent_bot].get)
         return response
