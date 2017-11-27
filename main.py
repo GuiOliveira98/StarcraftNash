@@ -117,10 +117,10 @@ class Main:
                 single_result_dict[player_b.get_name()][player_a.get_name()] = b_win_percentage
 
                 # TODO --- begin: print ranking ---
-                # >>> print code comes here
+		print player_b.ranking()
                 # TODO --- end: print ranking
 
-            print  # adds newline
+            print  # adds newline	
             self.result_list.append(single_result_dict)
 
         if self.config.output_match_choices is not None:
